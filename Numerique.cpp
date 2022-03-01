@@ -116,7 +116,7 @@ double maxi(double* Tab, int ndim)
 //                                                                          //
 // VARIABLES                                                                //
 //                                                                          //
-// int i : compteur                                                         //
+// int i, ite_relax : compteurs                                             //
 // Deter : Indique si le déterminant de la matrice                          //
 //         jacobienne a pu etre calculé                                     //
 //                                                                          //
@@ -139,7 +139,7 @@ void newton_raph(int ndim, int itemax, int* ite, double* crit_conver, double* cr
 	double* sol, int derivee, double pas, int relax, enum STATUT* statut, void (*syst) (double*, double*, double*),
 	void (*JAC) (double*, double**, double*), double* Fsol, double* parametre)
 {
-	int i;
+	int i, ite_relax;
 	double Deter;
 	double Norme;
 	double alpha;
@@ -209,15 +209,18 @@ void newton_raph(int ndim, int itemax, int* ite, double* crit_conver, double* cr
 					}
 					break;
 				case 2: // Relaxation numérique
-					alpha = 1;
+					alpha = 1; // Initialisation du coefficient alpha
+				    ite_relax = 0;
 					do {
 						for (i = 1; i <= ndim; i++)
 						{
-							Y[i] = sol[i] + alpha * H[i];
+							Y[i] = sol[i] + alpha * H[i]; // Calcul de la nouvelle solution
 						}
-						syst(Y, F_relax, parametre);
-						alpha = alpha / 2.;
-					} while (norme(F_relax, ndim) > Norme);
+						syst(Y, F_relax, parametre); // Evaluation de F
+						alpha = alpha / 2.; // Relaxation par réduction du paramètre alpha
+						ite_relax++; // On incrémente le compteur
+					} while (norme(F_relax, ndim) > Norme && ite_relax < 5); // Tant que la norme du nouveau F (F_relax)
+																			 //est supérieure à l'ancienne
 
 				}
 
