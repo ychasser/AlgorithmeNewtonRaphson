@@ -108,7 +108,7 @@ double maxi(double* Tab, int ndim)
 //                                                                          //
 // void (*syst) (double*, double*, double*) : Nom de la fonction            //
 //                         représentant le jacobien analytique du système   //
-//                         à résoudre (voir Fonctions.cpp)                  // 
+//                         à résoudre (voir Fonctions.cpp)                  //
 //                                                                          //
 // double* Fsol : Valeur du système à la solution                           //
 // double* parametre : vecteur de paramètres à passer aux systèmes          //
