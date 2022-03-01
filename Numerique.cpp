@@ -114,26 +114,26 @@ double maxi(double* Tab, int ndim)
 // double* parametre : vecteur de paramètres à passer aux systèmes          //
 //                     paramétrés                                           //
 //                                                                          //
-// VARIABLES																//
-//																			//
-// int i : compteur															//
-// Deter : Indique si le déterminant de la matrice							//
-//         jacobienne a pu etre calculé										//
-//																			//
-// Norme : Norme de Fsol (ou F_relax)										//
-// alpha : coefficient de la relaxation numérique							//
-// pivot_min : zero de la méthode du pivot (DMRINV)							//
-// type_calcul : Précision sur le choix de calcul							//
-//               à employer pour MRINV (voir MathLibC.h)					//
-//																			//
-// A : Matrice à inverser représentant le système d'equations linéaires		//
-// H : Pas calculé par résolution du système d'équations linéaires			//
-// Y : Vecteur solution mis à jour											//
-// Evol : Vecteur représentant l'évolution de la solution					//
-//        d'une itération sur l'autre										//
-//																			//
-// F_relax : Valeur du système au cours de la relaxation					//
-//																			//
+// VARIABLES                                                                //
+//                                                                          //
+// int i : compteur                                                         //
+// Deter : Indique si le déterminant de la matrice                          //
+//         jacobienne a pu etre calculé                                     //
+//                                                                          //
+// Norme : Norme de Fsol (ou F_relax)                                       //
+// alpha : coefficient de la relaxation numérique                           //
+// pivot_min : zero de la méthode du pivot (DMRINV)                         //
+// type_calcul : Précision sur le choix de calcul                           //
+//               à employer pour MRINV (voir MathLibC.h)                    //
+//                                                                          //
+// A : Matrice à inverser représentant le système d'equations linéaires     //
+// H : Pas calculé par résolution du système d'équations linéaires          //
+// Y : Vecteur solution mis à jour                                          //
+// Evol : Vecteur représentant l'évolution de la solution                   //
+//        d'une itération sur l'autre                                       //
+//                                                                          //
+// F_relax : Valeur du système au cours de la relaxation                    //
+//                                                                          //
 /*--------------------------------------------------------------------------*/
 void newton_raph(int ndim, int itemax, int* ite, double* crit_conver, double* crit_arret,
 	double* sol, int derivee, double pas, int relax, enum STATUT* statut, void (*syst) (double*, double*, double*),
