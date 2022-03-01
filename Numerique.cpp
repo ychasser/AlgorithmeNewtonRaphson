@@ -265,6 +265,7 @@ void newton_raph(int ndim, int itemax, int* ite, double* crit_conver, double* cr
 	delete[] H;
 	delete[] Evol;
 	delete[] Y;
+	delete[] F_relax;
 
 	for (i = 1; i <= ndim; i++)
 	{
