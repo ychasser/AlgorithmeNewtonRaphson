@@ -19,15 +19,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Fonctions.h" />
-    <ClInclude Include="MathLibC.h" />
-    <ClInclude Include="Numerique.h" />
+    <ClInclude Include="MethodeNumerique.h" />
+    <ClInclude Include="ModeleEANL.h" />
+    <ClInclude Include="ModeleSysteme1.h" />
     <ClInclude Include="type.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Fonctions.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Numerique.cpp" />
+    <ClCompile Include="MethodeNumerique.cpp" />
+    <ClCompile Include="ModeleEANL.cpp" />
+    <ClCompile Include="ModeleSysteme1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config_syst_1.dat" />
@@ -38,7 +40,7 @@
     <ProjectGuid>{72EB65D8-51D7-486C-90D0-8F2CDA9D2610}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>AlgorithmeNewtonRaphson</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -57,8 +59,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>

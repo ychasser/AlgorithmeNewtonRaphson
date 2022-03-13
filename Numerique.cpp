@@ -1,5 +1,5 @@
 #include <iostream>
-#include "MathLibC.h"
+#include "ModeleEANL.h"
 #include "Numerique.h"
 #include "type.h"
 #include "math.h"
@@ -9,8 +9,7 @@ using namespace std;
 /*--------------------------------------------------------------------------*/
 /* Définition du jacobien numérique										*/
 /*--------------------------------------------------------------------------*/
-void JAC_NUM(double* x, double* f, double** jacob, int ndim, double pas,
-	void (*syst) (double*, double*, double*), double* parametre)
+void JAC_NUM(double* x, int ndim, double pas, modeleEANL* modele)
 {
 	int i, j;
 	double* g;

@@ -9,10 +9,14 @@
 /*--------------------------------------------------------------------------*/
 
 #include <iostream>
-#include "type.h"
-#include "Fonctions.h"
-#include "Numerique.h"
 using namespace std;
+#include <stdio.h>
+using namespace std;
+#include "type.h"
+#include "MethodeNumerique.h"
+#include "ModeleEANL.h"
+#include "ModeleSysteme1.h"
+
 
 int main ()
 {
@@ -29,9 +33,13 @@ int main ()
 	double pas;
 	double crit_conver;
 	double crit_arret;
-	double *F;
-	double *X;
-	
+
+	double* X;
+	double* F;
+
+	ModeleSysteme1* modele1 = new ModeleSysteme1(2);
+
+
 	fopen_s(&fichier, "config_syst_1.dat", "r"); // Ouverture du fichier de configuration
 
 	// Mode de saisie 
@@ -53,7 +61,7 @@ int main ()
 
 		if (derivee == 2)
 		{
-			printf("Donner la valeur du pas pour le calcul de la derivee \n");
+			cout << "Donner la valeur du pas pour le calcul de la derivee" << endl;
 			cin >> pas;
 		}
 		
@@ -94,8 +102,8 @@ int main ()
 	}
 	
     // Allocation dymamique de X et  F
-	X = new double [ndim + 1];
-	F = new double [ndim + 1];
+	X = new double [ndim+1];
+	F = new double [ndim+1];
 		
 	// Valeur d'initialisation
 	if (saisie == 1) // Initialisation par le clavier
@@ -116,7 +124,7 @@ int main ()
 	}
 
 	// Appel à la procédure de calcul
-	newton_raph(ndim, itemax, &ite, &crit_conver, &crit_arret, X, derivee, pas, relax, &statut, syst1, JAC1, F );
+	MethodesNumeriques::newton_raph(itemax, &ite, &crit_conver, &crit_arret, X, derivee, pas, relax, &statut, modele1, F );
 
 	switch ( statut ) // Affichage du résultat
 	{

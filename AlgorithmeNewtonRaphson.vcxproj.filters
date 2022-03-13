@@ -1,40 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="Fonctions.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="MathLibC.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Numerique.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="type.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
+    <ClInclude Include="type.h" />
+    <ClInclude Include="MethodeNumerique.h" />
+    <ClInclude Include="ModeleSysteme1.h" />
+    <ClInclude Include="ModeleEANL.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Fonctions.cpp">
-      <Filter>Fichiers source</Filter>
-    </ClCompile>
-    <ClCompile Include="Main.cpp">
-      <Filter>Fichiers source</Filter>
-    </ClCompile>
-    <ClCompile Include="Numerique.cpp">
-      <Filter>Fichiers source</Filter>
-    </ClCompile>
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MethodeNumerique.cpp" />
+    <ClCompile Include="ModeleSysteme1.cpp" />
+    <ClCompile Include="ModeleEANL.cpp" />
+    <ClCompile Include="Fonctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config_syst_1.dat" />
     <None Include="config_syst_2.dat" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Fichiers d%27en-tête">
-      <UniqueIdentifier>{2ad6a1d1-9364-4aee-807c-298dca624037}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Fichiers source">
-      <UniqueIdentifier>{accf6506-beb6-472f-b96a-d80b79100892}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
 </Project>
