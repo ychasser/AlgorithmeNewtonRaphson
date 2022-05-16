@@ -11,7 +11,6 @@
 #include <iostream>
 using namespace std;
 #include <stdio.h>
-using namespace std;
 #include "type.h"
 #include "MethodeNumerique.h"
 #include "ModeleEANL.h"
@@ -20,51 +19,54 @@ using namespace std;
 
 int main ()
 {
-	int i;
-	int saisie, ndim;
-	int itemax, ite;
-	int derivee;
-	int relax;
-
-	enum STATUT statut;
-
-	FILE* fichier; 
 	
+	// Declarations
+	// -------------
+	int i, ndim, derivee, relax, itemax, saisie;
+	int ite = 0;
 	double pas;
 	double crit_conver;
 	double crit_arret;
-
 	double* X;
 	double* F;
+	FILE* fichier;
+	enum STATUT statut;
 
+
+	// Instanciation de la classe modele correspondant au systeme a resoudre
+	// ---------------------------------------------------------------------
 	ModeleSysteme1* modele1 = new ModeleSysteme1(2);
-
 
 	fopen_s(&fichier, "config_syst_1.dat", "r"); // Ouverture du fichier de configuration
 
-	// Mode de saisie 
+	// Choix du mode de saisie 
+	// -----------------------
 	cout << " Choississez votre mode de saisie des données " << endl;
 	cout << " CLAVIER ----> 1 " << endl;
 	cout << " FICHIER ----> 2 " << endl;
-
 	cin >> saisie;
 
+	// Lecture des données ou saisie à l'écran
+	// ---------------------------------------
 	if (saisie == 1) // Lecture des informations saisies par le clavier
 	{
 		cout << "Dimension du probleme à traiter" << endl;
 		cin >> ndim;
-		cout << "Type de derivee employee " << endl; 
-		cout << "Derivee analytique ---->  taper 1  " << endl ;
-		cout << "Derivee numerique  ---->  taper 2  " << endl ;
-		cin >> derivee ;
+		cout << "Type de derivee employee " << endl;
+		cout << "Derivee analytique ---->  taper 1  " << endl;
+		cout << "Derivee numerique  ---->  taper 2  " << endl;
+		cin >> derivee;
 
 
 		if (derivee == 2)
 		{
-			cout << "Donner la valeur du pas pour le calcul de la derivee" << endl;
+			printf("Donner la valeur du pas pour le calcul de la derivee \n");
 			cin >> pas;
 		}
-		
+		else {
+			pas = 0;
+		}
+
 		cout << "Relaxation ? " << endl;
 		cout << "Pas de relaxation ---->  taper 1  " << endl;
 		cout << "Relaxation numérique  ---->  taper 2  " << endl;
@@ -76,7 +78,6 @@ int main ()
 		cin >> crit_conver;
 		cout << "Nombre maximal d'iterations " << endl;
 		cin >> itemax;
-
 	} 
 	else if (saisie == 2 ) // Lecture de la configuration dans le fichier dédié
 	{
@@ -87,24 +88,26 @@ int main ()
 		{
 			cout << "mauvais choix dans le calcul de la dérivée" << endl;
 		}
-	
+
 		if (derivee == 2)
 		{
 			pas = 0.000001;
 		}
-		
-		fscanf_s(fichier, "%d", &relax);
-		fscanf_s (fichier,"%lf", &crit_arret);
-		fscanf_s (fichier,"%lf", &crit_conver);
-		fscanf_s (fichier, "%d", &itemax);
-	
+		else {
+			pas = 0;
+		}
 
+		fscanf_s(fichier, "%d", &relax);
+		fscanf_s(fichier, "%lf", &crit_arret);
+		fscanf_s(fichier, "%lf", &crit_conver);
+		fscanf_s(fichier, "%d", &itemax);
 	}
+
 	
-    // Allocation dymamique de X et  F
-	X = new double [ndim+1];
-	F = new double [ndim+1];
-		
+	// Allocation dymamique de X et F
+	X = new double [3];
+	F = new double [3];
+
 	// Valeur d'initialisation
 	if (saisie == 1) // Initialisation par le clavier
 	{
@@ -122,10 +125,17 @@ int main ()
 		}
 		fclose(fichier);
 	}
+	
+	
 
-	// Appel à la procédure de calcul
+
+	// Appel à la procédure de calcul Newton
+	// --------------------------------------
 	MethodesNumeriques::newton_raph(itemax, &ite, &crit_conver, &crit_arret, X, derivee, pas, relax, &statut, modele1, F );
 
+
+	// Affichage des resultats
+	// ------------------------
 	switch ( statut ) // Affichage du résultat
 	{
 	    case CONVERGENCE :
@@ -158,6 +168,7 @@ int main ()
 			cout << "nbre d'iterations " << ite << endl;
 			break ;
 	}
+
 	delete[] X;
 	delete[] F;
 }

@@ -11,10 +11,8 @@
     <ClCompile Include="MethodeNumerique.cpp" />
     <ClCompile Include="ModeleSysteme1.cpp" />
     <ClCompile Include="ModeleEANL.cpp" />
-    <ClCompile Include="Fonctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="config_syst_1.dat" />
-    <None Include="config_syst_2.dat" />
   </ItemGroup>
 </Project>

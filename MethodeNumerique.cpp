@@ -3,72 +3,19 @@
 using namespace std;
 #include "type.h"
 #include "MethodeNumerique.h"
+#include "ModeleEANL.h"
+#include "ModeleSysteme1.h"
 
 
-/*--------------------------------------------------------------------------*/
-/* Sous-programme de résolution d'un système d'équations non-linéaires		*/
-/* par la méthode de Newton-Raphson											*/
-/*																			*/
-/* AUTEURS :G.HETREUX 								               			*/
-/* DATE : 25/02/2001														*/
-// ARGUMENTS																//
-//																			//
-// int dim : Dimension du système à résoudre                                //
-// int itemax : Nombre maximum d'itérations si                              //
-//              aucune convergence/stagnation                               //
-//                                                                          //
-// int* ite : compteur d'iterations                                         //
-// double* crit_conver : critère de convergence (epsilon 1)                 //
-// double* crit_arret : critère de stagnation (epsilon 2)                   //
-// double* sol : vecteur solution calculé au cours de la méthode            //
-// int derivee : choix sur le mode de calcul                                //
-//               du jacobien (1 : Analytique, 2: Numérique)                 //
-//                                                                          //
-// double pas : pas utilisé pour la calcul du jacobien numérique            //
-// int relax : choix sur le mode de relaxation                              //
-//             (1 : pas de relaxation, 2 : relaxation numérique)            // 
-//                                                                          //
-// enum STATUT* statut : Indicateur sur le statut de la méthode             //
-//                       (EN_COURS, CONVERGENCE,                            //
-//                       STAGNATION_DU_PAS, NBRE_ITERATION_DEPASSE)         //
-//                                                                          //
-// void (*syst) (double*, double*, double*) : Nom de la fonction            //
-//                                            représentant le système à     //
-//                                            résoudre (voir Fonctions.cpp) //
-//                                                                          //
-// void (*syst) (double*, double*, double*) : Nom de la fonction            //
-//                         représentant le jacobien analytique du système   //
-//                         à résoudre (voir Fonctions.cpp)                  //
-//                                                                          //
-// double* Fsol : Valeur du système à la solution                           //
-// double* parametre : vecteur de paramètres à passer aux systèmes          //
-//                     paramétrés                                           //
-//                                                                          //
-// VARIABLES                                                                //
-//                                                                          //
-// int i, ite_relax : compteurs                                             //
-// Deter : Indique si le déterminant de la matrice                          //
-//         jacobienne a pu etre calculé                                     //
-//                                                                          //
-// Norme : Norme de Fsol (ou F_relax)                                       //
-// alpha : coefficient de la relaxation numérique                           //
-// pivot_min : zero de la méthode du pivot (DMRINV)                         //
-// type_calcul : Précision sur le choix de calcul                           //
-//               à employer pour MRINV (voir MathLibC.h)                    //
-//                                                                          //
-// A : Matrice à inverser représentant le système d'equations linéaires     //
-// H : Pas calculé par résolution du système d'équations linéaires          //
-// Y : Vecteur solution mis à jour                                          //
-// Evol : Vecteur représentant l'évolution de la solution                   //
-//        d'une itération sur l'autre                                       //
-//                                                                          //
-// F_relax : Valeur du système au cours de la relaxation                    //
-//                                                                          //
-/*--------------------------------------------------------------------------*/
-void MethodesNumeriques::newton_raph(int itemax, int* ite, double* crit_conver, double* crit_arret,
-	double* sol, int derivee, double pas, int relax, enum STATUT* statut, ModeleEANL* modele, double* Fsol)
+
+//-------------------------------------------------------------
+//
+//		ALGORITHME DE NEWTON RAPHSON
+//
+//--------------------------------------------------------------
+void MethodesNumeriques::newton_raph(int itemax, int* ite, double* crit_conver, double* crit_arret, double* X, int derivee, double pas, int relax, STATUT* statut, ModeleEANL *modele, double* F)
 {
-	int i, ite_relax;
+	int i, ite_relax, ndim;
 	double Deter;
 	double Norme;
 	double alpha;
@@ -83,15 +30,14 @@ void MethodesNumeriques::newton_raph(int itemax, int* ite, double* crit_conver, 
 	double* Evol; // vecteur de dimension 
 	double* F_relax;
 
-	// Definition du probleme
-	int ndim = modele->Get_dimension();
+	ndim = modele->Get_dimension();
 
 	H = new double[ndim + 1];
-	Y = new double[ndim + 1 ];
+	Y = new double[ndim + 1];
 	Evol = new double[ndim + 1];
-	F_relax = new double[ndim + 1 ];
+	F_relax = new double[ndim + 1];
 
-	A = new double*[ndim+1];
+	A = new double* [ndim + 1];
 	for (i = 1; i <= ndim; i++)
 	{
 		A[i] = new double[ndim + 1 + 1];
@@ -100,10 +46,10 @@ void MethodesNumeriques::newton_raph(int itemax, int* ite, double* crit_conver, 
 
 	// Début de la boucle de calcul - Initialisation
 	*ite = 0;
-	modele->EvaluerF(sol,Fsol); // Intitialisation de F
-	Norme = MethodesNumeriques::norme(Fsol, ndim); // Initialisation de la norme de F
+	modele->EvaluerF(X, F); // Intitialisation de F
+	Norme = norme(F, ndim); // Initialisation de la norme de F
 	*statut = EN_COURS; // Initialisation du statut de la méthode
-
+	
 	do
 	{
 		//  Test sur le critère de convergence
@@ -111,43 +57,43 @@ void MethodesNumeriques::newton_raph(int itemax, int* ite, double* crit_conver, 
 		{
 			(*ite)++; // Incrément du nombre d'itérations
 			if (*ite <= itemax)
+			
 			{
 				// Calcul du Jacobien
 				switch (derivee)
 				{
 				case 1: // Jacobien analytique
-					modele->EvaluerJacob(sol,A);
-
+					modele->EvaluerJacob(X, A);
 					break;
 				case 2: // Jacobien numérique
-					MethodesNumeriques::JAC_NUM(sol, Fsol, A, modele,pas);
+					JAC_NUM(X, F, A, modele, pas);
 					break;
 				}
 				// Remplissage de la matrice A : définition du système d'équations linéaires
-				for (i =1; i <= ndim; i++)
+				for (i = 1; i <= ndim; i++)
 				{
-					A[i][ndim+1] = -Fsol[i];
+					A[i][ndim + 1] = -F[i];
 				}
-
+				
 				// Appel a Mrinv : procédure de résolution de systeme d'equations lineaires
-				MethodesNumeriques::MRINV(A, A, ndim, 0, Deter, pivot_min, H, type_calcul);
+				MRINV(A, A, ndim, 0, Deter, pivot_min, H, type_calcul);
 
 				// Calcul de sol au pas suivant
 				switch (relax)
 				{
-				case 1: // Pas de ralaxation
+				case 1: // Pas de relaxation
 					for (i = 1; i <= ndim; i++)
 					{
-						Y[i] = sol[i] + H[i];
+						Y[i] = X[i] + H[i];
 					}
 					break;
 				case 2: // Relaxation numérique
 					alpha = 1; // Initialisation du coefficient alpha
 					ite_relax = 0;
 					do {
-						for (i =1; i <= ndim; i++)
+						for (i = 1; i <= ndim; i++)
 						{
-							Y[i] = sol[i] + alpha * H[i]; // Calcul de la nouvelle solution
+							Y[i] = X[i] + alpha * H[i]; // Calcul de la nouvelle solution
 						}
 						modele->EvaluerF(Y, F_relax); // Evaluation de F
 						alpha = alpha / 2.; // Relaxation par réduction du paramètre alpha
@@ -161,7 +107,7 @@ void MethodesNumeriques::newton_raph(int itemax, int* ite, double* crit_conver, 
 				// Calcul de l'évolution entre deux itérations
 				for (i = 1; i <= ndim; i++)
 				{
-					Evol[i] = fabs((Y[i] - sol[i]) / sol[i]);
+					Evol[i] = fabs((Y[i] - X[i]) / X[i]);
 				}
 
 				// Si la méthode ne stagne pas, on met à jour la solution
@@ -169,10 +115,10 @@ void MethodesNumeriques::newton_raph(int itemax, int* ite, double* crit_conver, 
 				{
 					for (i = 1; i <= ndim; i++)
 					{
-						sol[i] = Y[i];
+						X[i] = Y[i];
 					}
-					modele->EvaluerF(sol, Fsol); // Mise à jour de F
-					Norme = norme(Fsol, ndim); // Mise à jour de la norme de F
+					modele->EvaluerF(X, F); // Mise à jour de F
+					Norme = norme(F, ndim); // Mise à jour de la norme de F
 					cout << Norme << endl;
 				}
 				else
@@ -182,7 +128,7 @@ void MethodesNumeriques::newton_raph(int itemax, int* ite, double* crit_conver, 
 			}
 			else
 			{
-				*statut = NBRE_ITERATION_DEPASSE;
+			    *statut = NBRE_ITERATION_DEPASSE;
 			}
 
 		}
@@ -210,12 +156,10 @@ void MethodesNumeriques::newton_raph(int itemax, int* ite, double* crit_conver, 
 	delete[] A;
 }
 
-
-
-/*--------------------------------------------------------------------------*/
-/* Définition du jacobien numérique										*/
-/*--------------------------------------------------------------------------*/
-void MethodesNumeriques::JAC_NUM(double* x,double* f,double**jacob, ModeleEANL* modele,double pas)
+//--------------------------------------------------------------
+//		JACOBIEN NUMERIQUE									
+//-------------------------------------------------------------
+void MethodesNumeriques::JAC_NUM(double* x,double* f,double** jacob, ModeleEANL* modele,double pas)
 {
 	int i, j;
 	double* g;
